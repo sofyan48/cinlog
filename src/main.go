@@ -13,24 +13,13 @@ import (
 )
 
 // ConfigEnvironment ...
-func ConfigEnvironment(env string) {
+func configEnvironment(env string) {
 	if env == "development" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Error loading .env file")
 		}
 	}
-}
-
-func main() {
-	environment := flag.String("e", "development", "")
-	flag.Usage = func() {
-		fmt.Println("Usage: server -e {mode}")
-		os.Exit(1)
-	}
-	flag.Parse()
-	ConfigEnvironment(*environment)
-	startApp()
 }
 
 func startApp() {
@@ -40,4 +29,15 @@ func startApp() {
 	serverPort := os.Getenv("SERVER_PORT")
 	serverString := fmt.Sprintf("%s:%s", serverHost, serverPort)
 	router.Run(serverString)
+}
+
+func main() {
+	environment := flag.String("e", "development", "")
+	flag.Usage = func() {
+		fmt.Println("Usage: server -e {mode}")
+		os.Exit(1)
+	}
+	flag.Parse()
+	configEnvironment(*environment)
+	startApp()
 }
