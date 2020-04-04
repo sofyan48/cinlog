@@ -39,4 +39,4 @@ tmp
 # go sum
 go.sum
 db-init
-mongo
+/mongo
