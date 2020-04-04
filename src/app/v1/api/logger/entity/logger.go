@@ -15,7 +15,7 @@ type LoggerEventHistory struct {
 
 // LoggerHistory ...
 type LoggerHistory struct {
-	Data map[string]string `json:"data" bson:"data"`
+	Data map[string]interface{} `json:"data" bson:"data"`
 }
 
 // LoggerSearch ...
