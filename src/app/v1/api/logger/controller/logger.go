@@ -25,6 +25,7 @@ func LoggerControllerHandler() *LoggerController {
 type LoggerControllerInterface interface {
 	CreateLogger(context *gin.Context)
 	GetLogger(context *gin.Context)
+	AllLogger(context *gin.Context)
 }
 
 // CreateLogger ...
@@ -45,6 +46,19 @@ func (ctrl *LoggerController) GetLogger(context *gin.Context) {
 	payload := &entity.GetLoggerRequest{}
 	context.ShouldBind(payload)
 	result, err := ctrl.Service.GetLoggerByUUID(payload.UUID, payload.Action)
+	if err != nil {
+		rest.ResponseMessages(context, http.StatusInternalServerError, err.Error())
+		return
+	}
+	rest.ResponseData(context, http.StatusOK, result)
+	return
+}
+
+// AllLogger ...
+func (ctrl *LoggerController) AllLogger(context *gin.Context) {
+	payload := &entity.GetAllLoggerRequest{}
+	context.ShouldBind(payload)
+	result, err := ctrl.Service.GetLoggerAll(payload.Action)
 	if err != nil {
 		rest.ResponseMessages(context, http.StatusInternalServerError, err.Error())
 		return

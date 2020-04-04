@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"log"
 	"time"
 
 	"github.com/sofyan48/cinlog/src/app/v1/api/logger/entity"
@@ -49,4 +50,22 @@ func (logging *Logger) loggerGetMongoUUID(uuid, collection string) (*entity.Logg
 		return nil, err
 	}
 	return eventLogger, nil
+}
+
+func (logging *Logger) loggerGetAll(action string) ([]entity.LoggerEventHistory, error) {
+
+	cur, ctx, err := logging.Mongo.Find(action)
+	if err != nil {
+		return nil, err
+	}
+	result := []entity.LoggerEventHistory{}
+	for cur.Next(ctx) {
+		data := entity.LoggerEventHistory{}
+		err = cur.Decode(&data)
+		if err != nil {
+			log.Println("Error on Decoding the document", err)
+		}
+		result = append(result, data)
+	}
+	return result, nil
 }

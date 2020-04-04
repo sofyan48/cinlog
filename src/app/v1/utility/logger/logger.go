@@ -27,6 +27,7 @@ func LoggerHandler() *Logger {
 type LoggerInterface interface {
 	Save(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error)
 	Get(uuid, collection string) (*entity.LoggerEventHistory, error)
+	All(action string) (interface{}, error)
 }
 
 // Save ...
@@ -44,10 +45,23 @@ func (logging *Logger) Save(log *entity.LoggerRequest) (*entity.LoggerEventHisto
 }
 
 // Get ...
-func (logging *Logger) Get(uuid, collection string) (*entity.LoggerEventHistory, error) {
+func (logging *Logger) Get(uuid, action string) (*entity.LoggerEventHistory, error) {
 	switch logging.Driver {
 	case "mongo":
-		return logging.loggerGetMongoUUID(uuid, collection)
+		return logging.loggerGetMongoUUID(uuid, action)
+	case "s3":
+		fmt.Println("S3")
+	default:
+		fmt.Println("Default")
+	}
+	return nil, errors.New("Driver Load Failed")
+}
+
+// All ...
+func (logging *Logger) All(action string) (interface{}, error) {
+	switch logging.Driver {
+	case "mongo":
+		return logging.loggerGetAll(action)
 	case "s3":
 		fmt.Println("S3")
 	default:

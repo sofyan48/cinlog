@@ -9,4 +9,5 @@ func (rLoader *V1RouterLoader) initLogger(router *gin.Engine) {
 	group := router.Group(LOOGERROUTES)
 	group.POST("", rLoader.Logger.CreateLogger)
 	group.POST("get", rLoader.Logger.GetLogger)
+	group.POST("all", rLoader.Logger.AllLogger)
 }

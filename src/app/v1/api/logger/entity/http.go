@@ -13,3 +13,8 @@ type GetLoggerRequest struct {
 	UUID   string `json:"uuid" bson:"uuid"`
 	Action string `json:"action" bson:"action"`
 }
+
+// GetAllLoggerRequest ...
+type GetAllLoggerRequest struct {
+	Action string `json:"action" bson:"action"`
+}

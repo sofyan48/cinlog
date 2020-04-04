@@ -21,7 +21,7 @@ func MongoDBHandler() *MongoDB {
 type MongoDBInterface interface {
 	InsertOne(collection string, data interface{}) (*mongo.InsertOneResult, error)
 	InsertMany(collection string, data []interface{}) (*mongo.InsertManyResult, error)
-	Find(collection string, filter interface{}) (*mongo.Cursor, context.Context, error)
+	Find(collection string) (*mongo.Cursor, context.Context, error)
 	FindOne(collection string, filter interface{}) (*mongo.SingleResult, error)
 	GetOne(collection string, filter interface{}) (*mongo.SingleResult, error)
 	Delete(collection string, filter interface{}) (*mongo.DeleteResult, error)
@@ -65,17 +65,18 @@ func (mongolib *MongoDB) InsertMany(collection string, data []interface{}) (*mon
 }
 
 // Find ...
-func (mongolib *MongoDB) Find(collection string, filter interface{}) (*mongo.Cursor, context.Context, error) {
+func (mongolib *MongoDB) Find(collection string) (*mongo.Cursor, context.Context, error) {
 	db, ctx, err := mongolib.init()
 	if err != nil {
 		return nil, nil, err
 	}
-	csr, err := db.Collection(collection).Find(ctx, filter)
+	cur, err := db.Collection(collection).Find(ctx, bson.D{})
 	if err != nil {
-		defer csr.Close(ctx)
+		defer cur.Close(ctx)
 		return nil, nil, err
 	}
-	return csr, ctx, nil
+
+	return cur, ctx, nil
 }
 
 // FindOne ...

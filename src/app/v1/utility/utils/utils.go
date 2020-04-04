@@ -1,8 +1,9 @@
-package str_process
+package utils
 
 import (
 	"log"
 	"math/rand"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -53,4 +54,9 @@ func GenerateUniqueCode(text string) string {
 	result := processedText + "-" + code
 	return result
 
+}
+
+// MakeDir ..
+func MakeDir(path string) error {
+	return os.MkdirAll(path, os.ModePerm)
 }
