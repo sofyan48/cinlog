@@ -9,21 +9,12 @@ import (
 // KafkaLibrary ...
 type KafkaLibrary struct{}
 
-// ProducersMessageFormat ...
+// StateFullFormat ...
 type StateFullFormat struct {
-	UUID      string             `json:"__uuid" bson:"__uuid"`
-	Action    string             `json:"__action" bson:"__action"`
-	Data      map[string]string  `json:"data" bson:"data"`
-	Offset    int64              `json:"offset" bson:"offset"`
-	History   []HistoryStatefull `json:"history" bson:"history"`
-	CreatedAt *time.Time         `json:"created_at" bson:"created_at"`
-}
-
-// HistoryStatefull ...
-type HistoryStatefull struct {
-	Name        string `json:"name" bson:"name"`
-	Description string `json:"description" bson:"description"`
-	Code        uint   `json:"code" bson:"code"`
+	UUID   string                 `json:"__uuid"`
+	Action string                 `json:"__action"`
+	Data   map[string]interface{} `json:"data"`
+	Status string                 `json:"status"`
 }
 
 // KafkaLibraryHandler ...
@@ -34,7 +25,6 @@ func KafkaLibraryHandler() *KafkaLibrary {
 // KafkaLibraryInterface ...
 type KafkaLibraryInterface interface {
 	GetStateFull() *StateFullFormat
-	SendEvent(topic string, payload *StateFullFormat) (*StateFullFormat, int64, error)
 	InitConsumer() (sarama.Consumer, error)
 }
 

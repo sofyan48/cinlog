@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/sofyan48/cinlog/src/config"
+	"github.com/sofyan48/cinlog/src/worker"
 
 	"github.com/joho/godotenv"
 	apiRouter "github.com/sofyan48/cinlog/src/router"
@@ -23,6 +24,9 @@ func configEnvironment(env string) {
 }
 
 func startApp() {
+	if os.Getenv("EVENT_BASE") == "1" {
+		go worker.LoadWorker()
+	}
 	router := config.SetupRouter()
 	apiRouter.LoadRouter(router)
 	serverHost := os.Getenv("SERVER_ADDRESS")

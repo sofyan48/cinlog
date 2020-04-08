@@ -18,23 +18,23 @@ type Logger struct {
 // LoggerHandler habndler logger
 func LoggerHandler() *Logger {
 	return &Logger{
-		Driver: os.Getenv("LOGGER_DRIVER"),
+		Driver: os.Getenv("LOGGER_STORAGE"),
 		Mongo:  mongodb.MongoDBHandler(),
 	}
 }
 
 // LoggerInterface ..
 type LoggerInterface interface {
-	Save(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error)
+	Save(origin string, log *entity.LoggerRequest) (*entity.LoggerEventHistory, error)
 	Get(uuid, collection string) (*entity.LoggerEventHistory, error)
 	All(action string) (interface{}, error)
 }
 
 // Save ...
-func (logging *Logger) Save(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
+func (logging *Logger) Save(origin string, log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
 	switch logging.Driver {
 	case "mongo":
-		return logging.loggerMongoSave(log)
+		return logging.loggerMongoSave(origin, log)
 	case "s3":
 		fmt.Println("S3")
 	default:

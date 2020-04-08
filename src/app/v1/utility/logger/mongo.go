@@ -8,18 +8,25 @@ import (
 )
 
 // LoggerMongoSave ..
-func (logging *Logger) loggerMongoSave(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
+func (logging *Logger) loggerMongoSave(origin string, log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
+	const eventName = "payment_save"
 	now := time.Now()
 	findLogger := &entity.LoggerSearch{}
 	historyLogger := entity.LoggerHistory{}
 	historyLoggerSlice := []entity.LoggerHistory{}
+
 	eventLogger := &entity.LoggerEventHistory{}
+
 	findLogger.UUID = log.UUID
 	result, err := logging.Mongo.FindOne(log.Action, findLogger)
 	err = result.Decode(eventLogger)
 	if err != nil {
+		actionHistory := &entity.LoggerActionHistory{}
+		actionHistory.Collection = log.Action
+		actionHistory.Event = eventName
+		actionHistory.Origin = origin
 		eventLogger.Offset = 0
-		eventLogger.Action = log.Action
+		eventLogger.Action = actionHistory
 		eventLogger.CreatedAt = &now
 		eventLogger.UpdateAt = &now
 		eventLogger.UUID = log.UUID

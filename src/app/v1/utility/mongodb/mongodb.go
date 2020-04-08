@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"log"
 	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -49,6 +50,7 @@ func (mongolib *MongoDB) init() (*mongo.Database, context.Context, error) {
 func (mongolib *MongoDB) InsertOne(collection string, data interface{}) (*mongo.InsertOneResult, error) {
 	db, ctx, err := mongolib.init()
 	if err != nil {
+		log.Println("ERROR: ", err)
 		return nil, err
 	}
 

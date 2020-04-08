@@ -21,6 +21,8 @@ func LoggerControllerHandler() *LoggerController {
 	}
 }
 
+const origin = "REST"
+
 // LoggerControllerInterface ...
 type LoggerControllerInterface interface {
 	CreateLogger(context *gin.Context)
@@ -32,7 +34,7 @@ type LoggerControllerInterface interface {
 func (ctrl *LoggerController) CreateLogger(context *gin.Context) {
 	payload := &entity.LoggerRequest{}
 	context.ShouldBind(payload)
-	result, err := ctrl.Service.CreateLoggerService(payload)
+	result, err := ctrl.Service.CreateLoggerService(origin, payload)
 	if err != nil {
 		rest.ResponseMessages(context, http.StatusInternalServerError, err.Error())
 		return

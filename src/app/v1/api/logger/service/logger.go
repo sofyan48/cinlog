@@ -19,14 +19,14 @@ func LoggerServiceHandler() *LoggerService {
 
 // LoggerServiceInterface ...
 type LoggerServiceInterface interface {
-	CreateLoggerService(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error)
+	CreateLoggerService(origin string, log *entity.LoggerRequest) (*entity.LoggerEventHistory, error)
 	GetLoggerByUUID(uuid, action string) (*entity.LoggerEventHistory, error)
 	GetLoggerAll(action string) (interface{}, error)
 }
 
 // CreateLoggerService ...
-func (service *LoggerService) CreateLoggerService(log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
-	return service.Logger.Save(log)
+func (service *LoggerService) CreateLoggerService(origin string, log *entity.LoggerRequest) (*entity.LoggerEventHistory, error) {
+	return service.Logger.Save(origin, log)
 }
 
 // GetLoggerByUUID ...
