@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
+	"github.com/sofyan48/cinlog/src/app/v1/api/logger/entity"
 )
 
 // KafkaLibrary ...
@@ -11,10 +12,8 @@ type KafkaLibrary struct{}
 
 // StateFullFormat ...
 type StateFullFormat struct {
-	UUID   string                 `json:"__uuid"`
-	Action string                 `json:"__action"`
-	Data   map[string]interface{} `json:"data"`
-	Status string                 `json:"status"`
+	Payload  *entity.LoggerRequest `json:"payload"`
+	Function string                `json:"__function"`
 }
 
 // KafkaLibraryHandler ...

@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/Shopify/sarama"
-	"github.com/sofyan48/cinlog/src/app/v1/api/logger/entity"
 	"github.com/sofyan48/cinlog/src/app/v1/utility/kafka"
 	"github.com/sofyan48/cinlog/src/app/v1/utility/logger"
 )
@@ -58,7 +57,15 @@ ConsumerLoop:
 		case msg := <-chanMessage:
 			eventData := &kafka.StateFullFormat{}
 			json.Unmarshal(msg.Value, eventData)
-			consumer.eventLoad(eventData)
+			switch eventData.Function {
+			case "save":
+				consumer.eventSave(eventData)
+			case "delete":
+				consumer.eventDelete(eventData.Payload.UUID)
+			default:
+				log.Println("DEFAULT")
+
+			}
 		case sig := <-signals:
 			if sig == os.Interrupt {
 				break ConsumerLoop
@@ -85,12 +92,11 @@ func consumeMessage(consumer sarama.Consumer, topic string, partition int32, c c
 
 }
 
-func (consumer *V1ConsumerEvents) eventLoad(data *kafka.StateFullFormat) {
+func (consumer *V1ConsumerEvents) eventSave(data *kafka.StateFullFormat) {
 	const eventOrigin = "BROKER"
-	payload := &entity.LoggerRequest{}
-	payload.Action = data.Action
-	payload.UUID = data.UUID
-	payload.Data = data.Data
-	payload.Status = data.Status
-	go consumer.Logger.Save(eventOrigin, payload)
+	go consumer.Logger.Save(eventOrigin, data.Payload)
+}
+
+func (consumer *V1ConsumerEvents) eventDelete(uuid string) {
+	fmt.Println("DELETED EVENT")
 }
